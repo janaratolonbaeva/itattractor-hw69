@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import SearchInput from "./components/SearchInput/SearchInput";
+import React from "react";
+import { BrowserRouter,Switch, Route, Link } from "react-router-dom";
+import Header from "./components/Header/Header";
+import {Container} from "@material-ui/core";
+import Movie from "./containers/Movie/Movie";
+import Home from "./containers/Home/Home";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Container maxWidth="md">
+        <Header/>
+        <SearchInput/>
+          <div className="App">
+            <Switch>
+              <Route path="/" exact component={Home}/>
+            </Switch>
+            <Switch>
+              <Route path="/shows/:id" component={Movie}/>
+            </Switch>
+          </div>
+        </Container>
+    </BrowserRouter>
   );
 }
 
