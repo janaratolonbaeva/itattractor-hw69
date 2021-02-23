@@ -6,9 +6,10 @@ import TextField from '@material-ui/core/TextField';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import {makeStyles} from "@material-ui/core/styles";
-import {printText} from "../../store/actions/movieActions";
+import {cleanValue, printText} from "../../store/actions/movieActions";
 import {useDispatch, useSelector} from "react-redux";
 import {getMovies} from '../../store/actions/movieActions';
+import {NavLink} from "react-router-dom";
 
 const useStyle = makeStyles({
 	root: {
@@ -25,25 +26,30 @@ const useStyle = makeStyles({
 		bottom: 'auto',
 		marginTop: '10px'
 	},
+	list: {
+		padding: '0'
+	},
 	listItem: {
 		cursor: 'pointer',
 		padding: '10px 20px'
 	}
 })
 
-const SearchInput = (props) => {
+const SearchInput = () => {
 	const dispatch = useDispatch();
 	const state = useSelector(state => state);
 	const classes = useStyle();
 
 	useEffect(() => {
 		dispatch(getMovies(state.value));
-	}, [state.value])
+	}, [state.value]);
 
+	const inputHandler = e => {
+		dispatch(printText(e.target.value))
+	}
 
-	const goTo = (id) => {
-		console.log(id);
-		props.history.push(`/shows/${id}`)
+	const deleteValue = () => {
+		dispatch(cleanValue(state.value))
 	}
 
 	return (
@@ -52,12 +58,22 @@ const SearchInput = (props) => {
 				<Typography>Search for TV Show: </Typography>
 			</Grid>
 			<Grid item xs={8} className={classes.autocompleteParent}>
-				<TextField value={state.value} variant="outlined" fullWidth onChange={(e) => dispatch(printText(e.target.value))}/>
+				<TextField value={state.value}
+									 variant="outlined"
+									 fullWidth
+									 onChange={inputHandler}
+				/>
 				<Paper className={classes.autocomplete}>
-					<List>
+					<List className={classes.list}>
 						{state.movies.map((item, index) => {
 							return (
-								<ListItem onClick={() => goTo(item.show.id)} className={classes.listItem}>{item.show.name}</ListItem>
+								<ListItem key={index} className={classes.listItem}>
+									<NavLink to={`/shows/` + item.show.id}
+													 onClick={deleteValue}
+									>
+										{item.show.name}
+									</NavLink>
+								</ListItem>
 							)
 						})}
 					</List>

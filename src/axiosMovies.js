@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const axiosOrders = axios.create({
+const axiosMovies = axios.create({
 	baseURL: 'http://api.tvmaze.com/'
 });
 
-export default axiosOrders;
+export default axiosMovies;
